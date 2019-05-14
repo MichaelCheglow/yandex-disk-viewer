@@ -11,13 +11,14 @@
         >
           First, authenticate.
         </a>
-      </div> 
+      </div>
+      <FilesNav/>
       <FilesTable
         v-if="data"
         :data="data"
         :loaded="$async.loadFilesList.$pending"
         class="page-main__files-table"
-        @open-folder="(newPath) => {path = newPath}"
+        @open-folder="(path) => {this.$router.push(path)}"
       />
     </div>
   </div>
@@ -25,15 +26,16 @@
 <script>
 import { mapState, mapMutations } from 'vuex'
 import { getData } from '@/utils/auth.js'
+import FilesNav from '@/components/FilesNav.vue'
 import FilesTable from '@/components/FilesTable.vue'
 export default {
   name: 'PageMain',
   components: {
+    FilesNav,
     FilesTable
   },
   data () {
     return {
-      path: '/',
       data: null
     }
   },
@@ -56,13 +58,13 @@ export default {
     }
   },
   watch: {
-    path () {
+    '$route.path' () {
       this.$async.loadFilesList.$perform().then(res => { this.data = res._embedded.items })
     }
   },
   asyncOperations: {
     loadFilesList () {
-      return this.getData(this.path, this.authToken)
+      return this.getData(this.$route.path, this.authToken)
     }
   },
   created () {

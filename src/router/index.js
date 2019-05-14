@@ -8,12 +8,12 @@ Vue.use(Router)
 
 const routes = [
   {
-    path: '/',
-    component: PageMain
-  },
-  {
     path: '/callback',
     component: PageCallback
+  },
+  {
+    path: '*',
+    component: PageMain
   }
 ]
 
