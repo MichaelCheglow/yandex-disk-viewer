@@ -1,16 +1,9 @@
 <template>
-  <div
-    id="app"
-    class="root"
-  >
+  <div id="app">
     <div class="layout-main">
-      <nav
-        class="navbar navbar-expand-lg navbar-light bg-light layout-main__header"
-      >
-        <a class="navbar-brand" href="/">
-          <img src="/logo.svg" alt="Yandex Disk"> Яндекс Диск
-        </a>
-      </nav>
+      <div class="layout-main__header">
+        <HeaderMain/>
+      </div>
       <div class="layout-main__content">
         <div class="container">
           <div
@@ -26,66 +19,28 @@
           </div>
 
           <div v-if="this.data">
-            <table class="table table-hover table-centered">
-              <thead class="thead-dark">
-                <tr>
-                  <th
-                    scope="col"
-                    style="width: 60px"
-                  >
-                    #
-                  </th>
-                  <th
-                    scope="col"
-                    style="width: 60px"></th>
-                  <th scope="col">Name</th>
-                  <th
-                    scope="col"
-                    style="width: 100px"
-                  >
-                    Size
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(file, index) in this.data._embedded.items"
-                  :key="file.resource_id"
-                  v-on=" file.type === 'dir' ? { click: () => {path = file.path} } : {} "
-                >
-                  <td>{{ index + 1 }}</td>
-                  <td>
-                    <span
-                      :style="{ backgroundImage: `url(${defineIcon(file)})` }"
-                      class="file__icon"
-                    ></span>
-                  </td>
-                  <td>{{ file.name }}</td>
-                  <td>
-                    <span v-if="file.type === 'file'">{{ formatBytes(file.size) }}</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>          
+            <FilesTable
+              :data="data"
+              @open-folder="(newPath) => {path = newPath}"
+            />
           </div>
-
         </div>
       </div>
-
     </div>
   </div>
 </template>
 <script>
-// import Folder from './components/Folder.vue'
 import '@/assets/css/main.styl'
 import qs from 'qs'
 import { mapState, mapMutations } from 'vuex'
-import { get, formatBytes } from './utils'
-
+import { get } from './utils'
+import HeaderMain from "@/components/HeaderMain.vue";
+import FilesTable from '@/components/FilesTable.vue'
 export default {
   name: 'app',
   components: {
-    // Folder
+    HeaderMain,
+    FilesTable
   },
   data () {
     return {
@@ -103,8 +58,6 @@ export default {
       'updateToken'
     ]),
 
-    formatBytes,
-
     loadToken () {
       if (!this.authToken) {
         let tokenFromLocalStorage = localStorage.getItem('yandex-disk-viewer-oauth-token')
@@ -119,25 +72,12 @@ export default {
           localStorage.setItem('yandex-disk-viewer-oauth-token', tokenFromUrl)
         }
       }
-    },
-
-    defineIcon (file) {
-      const fileType = {
-        'compressed': 'archive',
-        'web': 'code',
-        'development': 'code',
-        'executable': 'exe'
-      }
-
-      if (file.type === 'dir') { return '/file-icons/folder.png' }
-      else if (file.preview) { return file.preview }
-      else if (fileType[file.media_type]) { return `/file-icons/${fileType[file.media_type]}.png` }
-      else { return '/file-icons/file.png' }
     }
   },
   watch: {
     path () {
-      this.axios.get(`https://cloud-api.yandex.net:443/v1/disk/resources?${qs.stringify({ path: this.path })}`).then(response => (this.data = response.data))
+      this.axios.get(`https://cloud-api.yandex.net:443/v1/disk/resources?${qs.stringify({ path: this.path })}`).then(
+        response => (this.data = response.data._embedded.items))
     }
   },
   asyncOperations: {
@@ -152,7 +92,7 @@ export default {
 
     if (this.authToken) {
       this.axios.defaults.headers.common['Authorization'] = `OAuth ${this.authToken}`
-      this.axios.get(`https://cloud-api.yandex.net:443/v1/disk/resources?${qs.stringify({ path: this.path })}`).then(response => (this.data = response.data))
+      this.axios.get(`https://cloud-api.yandex.net:443/v1/disk/resources?${qs.stringify({ path: this.path })}`).then(response => (this.data = response.data._embedded.items))
     }
   }
 }
