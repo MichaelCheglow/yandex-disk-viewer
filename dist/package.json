@@ -1,10 +1,10 @@
 {
-    "name": "vue-yandex-viewer",
-    "version": "1.0.0",
-    "description": "Heroku App",
-    "author": "Michael Cheglow",
-    "private": true,
-    "scripts": {
+  "name": "vue-yandex-viewer",
+  "version": "1.0.0",
+  "description": "Heroku App",
+  "author": "Michael Cheglow",
+  "private": true,
+  "scripts": {
       "postinstall": "npm install express"
-    }
   }
+}
