@@ -1,5 +1,5 @@
 export default {
-    updateToken (state, token) {
-        state.authToken = token
-    }
+  setToken (state, tokenId) {
+    state.authToken = `OAuth ${tokenId}`
+  }
 }

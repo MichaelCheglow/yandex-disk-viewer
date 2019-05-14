@@ -1,47 +1,63 @@
 <template>
-  <table class="table table-hover table-centered">
-    <thead class="thead-dark">
-      <tr>
-        <th
-          scope="col"
-          style="width: 60px"
-        >
-          #
-        </th>
-        <th
-          scope="col"
-          style="width: 60px"
-        >
-        </th>
-        <th scope="col">Name</th>
-        <th
-          scope="col"
-          style="width: 100px"
-        >
-          Size
-        </th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr
-        v-for="(file, index) in this.data"
-        :key="file.resource_id"
-        v-on=" file.type === 'dir' ? { click: () => {openFolder(file.path)} } : {} "
+  <div class="files-table">
+    <div      
+      v-if="loaded"
+      class="files-table__loader"
+    >
+      <div 
+        class="spinner-border text-primary"
+        role="status"
       >
-        <td>{{ index + 1 }}</td>
-        <td>
-          <span
-            :style="{ backgroundImage: `url(${defineIcon(file)})` }"
-            class="file__icon"
-          ></span>
-        </td>
-        <td>{{ file.name }}</td>
-        <td>
-          <span v-if="file.type === 'file'">{{ formatBytes(file.size) }}</span>
-        </td>
-      </tr>
-    </tbody>
-  </table>  
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+    <table
+      v-else
+      class="table table-hover table-centered"
+    >
+      <thead class="thead-dark">
+        <tr>
+          <th
+            scope="col"
+            style="width: 60px"
+          >
+            #
+          </th>
+          <th
+            scope="col"
+            style="width: 60px"
+          >
+          </th>
+          <th scope="col">Name</th>
+          <th
+            scope="col"
+            style="width: 120px"
+          >
+            Size
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr
+          v-for="(file, index) in this.data"
+          :key="file.resource_id"
+          v-on=" file.type === 'dir' ? { click: () => {openFolder(file.path)} } : {} "
+        >
+          <td>{{ index + 1 }}</td>
+          <td>
+            <span
+              :style="{ backgroundImage: `url(${defineIcon(file)})` }"
+              class="file__icon"
+            ></span>
+          </td>
+          <td>{{ file.name }}</td>
+          <td>
+            <span v-if="file.type === 'file'">{{ formatBytes(file.size) }}</span>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 <script>
 export default {
@@ -50,6 +66,10 @@ export default {
     data: {
       type: Array,
       required: true
+    },
+    loaded: {
+      type: Boolean,
+      default: false
     }
   },
   methods: {

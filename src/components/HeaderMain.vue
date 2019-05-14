@@ -3,9 +3,9 @@
     <nav
       class="navbar navbar-expand-lg navbar-light bg-light header-main__nav"
     >
-      <a class="navbar-brand" href="/">
+      <router-link class="navbar-brand" to="/">
         <img src="/logo.svg" alt="Yandex Disk"> Яндекс Диск
-      </a>
+      </router-link>
     </nav>
   </header>
 </template>
