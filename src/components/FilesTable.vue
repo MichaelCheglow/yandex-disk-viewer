@@ -100,7 +100,7 @@ export default {
     },
 
     openFolder (path) {
-      this.$emit('open-folder', path)
+      this.$emit('open-folder', path.replace(/^disk:/, ''))
     }
   }
 }
