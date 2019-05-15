@@ -1,7 +1,7 @@
 <template>
   <div class="page-main">
     <div
-      v-if="!data"
+      v-if="!data && !this.tokenId"
       class="d-flex justify-content-center"
     >
       <a
@@ -41,7 +41,7 @@ export default {
   computed: {
     ...mapState(['tokenId']),
 
-    ...mapGetters(['authToken'])
+    ...mapGetters(['token'])
   },
   methods: {
     ...mapMutations(['setTokenId']),
@@ -61,7 +61,7 @@ export default {
   },
   asyncOperations: {
     loadFilesList () {
-      return this.getData(this.$route.path, this.authToken)
+      return this.getData(this.$route.path, this.token)
     }
   },
   created () {

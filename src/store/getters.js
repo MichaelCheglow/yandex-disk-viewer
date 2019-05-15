@@ -1,6 +1,6 @@
 export default {
     token (state) {
-      state.authToken = `OAuth ${state.tokenId}`
+      return `OAuth ${state.tokenId}`
     }
   }
   
