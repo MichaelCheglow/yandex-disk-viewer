@@ -23,7 +23,7 @@
   </div>
 </template>
 <script>
-import { mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 import { getData } from '@/utils/auth.js'
 import FilesNav from '@/components/FilesNav.vue'
 import FilesTable from '@/components/FilesTable.vue'
@@ -39,19 +39,17 @@ export default {
     }
   },
   computed: {
-    ...mapGetters([
-      'token'
-    ])
+    ...mapState(['tokenId']),
+
+    ...mapGetters(['authToken'])
   },
   methods: {
-    ...mapMutations([
-      'setTokenId'
-    ]),
+    ...mapMutations(['setTokenId']),
 
     getData,
 
     loadToken () {
-      if (this.authToken) return
+      if (this.tokenId) return
       const token = localStorage.getItem('yandex-disk-viewer-oauth-token')
       this.setTokenId(token)
     }
@@ -63,12 +61,12 @@ export default {
   },
   asyncOperations: {
     loadFilesList () {
-      return this.getData(this.$route.path, this.token)
+      return this.getData(this.$route.path, this.authToken)
     }
   },
   created () {
     this.loadToken()
-    if (this.authToken) this.$async.loadFilesList.$perform().then(res => { this.data = res._embedded.items })
+    if (this.tokenId) this.$async.loadFilesList.$perform().then(res => { this.data = res._embedded.items })
   }
 }
 </script>
