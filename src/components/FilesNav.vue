@@ -1,5 +1,5 @@
 <template>
-  <nav class="navigation" aria-label="breadcrumb">
+  <nav class="navigation no-margin" aria-label="breadcrumb">
     <button
       type="button"
       class="btn btn-primary navigation__btn-back"
