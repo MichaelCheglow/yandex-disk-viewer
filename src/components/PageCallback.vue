@@ -7,7 +7,7 @@ export default {
   name: 'PageCallback',
   methods: {
     ...mapMutations([
-      'setToken'
+      'setTokenId'
     ])
   },
   mounted () {
