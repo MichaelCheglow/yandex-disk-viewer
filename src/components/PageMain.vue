@@ -1,20 +1,19 @@
 <template>
   <div class="page-main">
-    <div class="container page-main__container">
-      <div
-        v-if="!authToken"
-        class="d-flex justify-content-center"
+    <div
+      v-if="!data"
+      class="d-flex justify-content-center"
+    >
+      <a
+        href="https://oauth.yandex.ru/authorize?response_type=token&client_id=d11e9e49b8944a9d84ac5ab58e1d41d0"
+        class="btn btn-success m-5"
       >
-        <a
-          href="https://oauth.yandex.ru/authorize?response_type=token&client_id=c4d3e216a49a405e8f9c92899747f86c"
-          class="btn btn-success m-5"
-        >
-          First, authenticate.
-        </a>
-      </div>
+        First, authenticate.
+      </a>
+    </div>
+    <div  v-if="data" class="container page-main__container">
       <FilesNav/>
       <FilesTable
-        v-if="data"
         :data="data"
         :loaded="$async.loadFilesList.$pending"
         class="page-main__files-table"
@@ -24,7 +23,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex'
+import { mapGetters, mapMutations } from 'vuex'
 import { getData } from '@/utils/auth.js'
 import FilesNav from '@/components/FilesNav.vue'
 import FilesTable from '@/components/FilesTable.vue'
@@ -40,13 +39,13 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'authToken'
+    ...mapGetters([
+      'token'
     ])
   },
   methods: {
     ...mapMutations([
-      'setToken'
+      'setTokenId'
     ]),
 
     getData,
@@ -54,7 +53,7 @@ export default {
     loadToken () {
       if (this.authToken) return
       const token = localStorage.getItem('yandex-disk-viewer-oauth-token')
-      this.setToken(token)
+      this.setTokenId(token)
     }
   },
   watch: {
@@ -64,7 +63,7 @@ export default {
   },
   asyncOperations: {
     loadFilesList () {
-      return this.getData(this.$route.path, this.authToken)
+      return this.getData(this.$route.path, this.token)
     }
   },
   created () {
