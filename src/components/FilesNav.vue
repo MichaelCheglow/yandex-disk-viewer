@@ -1,11 +1,13 @@
 <template>
   <nav class="navigation" aria-label="breadcrumb">
     <button
+      :disabled="$route.path === '/'"
       type="button"
       class="btn btn-primary navigation__btn-back"
-      @click="$router.go(-1)"
+      title="Back"
+      @click="$router.push(createBreadcrumbsLink())"
     >
-      Back
+      <i class="icon-left-arrow"></i>
     </button>
     <ol class="breadcrumb no-margin">
       <li
@@ -40,7 +42,7 @@ export default {
     }
   },
   methods: {
-    createBreadcrumbsLink (index) {
+    createBreadcrumbsLink (index = this.breadcrumbsList.length - 2) {
       if (index === 0) return '/'
       return `/${this.breadcrumbsList.slice(1, index + 1).join('/')}`
     }

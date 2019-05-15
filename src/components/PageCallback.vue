@@ -14,7 +14,7 @@ export default {
     this.$nextTick(() => {
       const token = /access_token=([^&]+)/.exec(document.location.hash)[1]
       
-      localStorage.setItem('yandex-disk-viewer-oauth-token', token)
+      localStorage.setItem(process.env.VUE_APP_TOKEN_NAME, token)
       this.setTokenId(token)
       this.$router.push('/')
     })

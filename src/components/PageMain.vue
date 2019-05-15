@@ -5,13 +5,13 @@
       class="d-flex justify-content-center"
     >
       <a
-        href="https://oauth.yandex.ru/authorize?response_type=token&client_id=d11e9e49b8944a9d84ac5ab58e1d41d0"
+        :href="authLink"
         class="btn btn-success m-5"
       >
         First, authenticate.
       </a>
     </div>
-    <div v-else class="container page-main__container">
+    <div v-if="data" class="container page-main__container">
       <FilesNav/>
       <FilesTable
         :data="data"
@@ -35,6 +35,7 @@ export default {
   },
   data () {
     return {
+      authLink: `https://oauth.yandex.ru/authorize?response_type=token&client_id=${process.env.VUE_APP_CLIENT_ID}`,
       data: null
     }
   },
@@ -48,10 +49,10 @@ export default {
 
     getData,
 
-    loadToken () {
+    initToken () {
       if (this.tokenId) return
-      const token = localStorage.getItem('yandex-disk-viewer-oauth-token')
-      this.setTokenId(token)
+      const token = localStorage.getItem(process.env.VUE_APP_TOKEN_NAME)
+      this.setTokenId(token)    
     }
   },
   watch: {
@@ -65,7 +66,7 @@ export default {
     }
   },
   created () {
-    this.loadToken()
+    this.initToken()
     if (this.tokenId) this.$async.loadFilesList.$perform().then(res => { this.data = res._embedded.items })
   }
 }
