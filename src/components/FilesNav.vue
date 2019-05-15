@@ -7,7 +7,7 @@
     >
       Back
     </button>
-    <ol class="breadcrumb">
+    <ol class="breadcrumb no-margin">
       <li
         v-for="(breadcrumb, index) in breadcrumbsList"
         :key="index"
